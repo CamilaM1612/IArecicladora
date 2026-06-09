@@ -1,6 +1,6 @@
 # Entorno virtual
 venv/
-
+dataset/
 # Python
 __pycache__/
 *.pyc
