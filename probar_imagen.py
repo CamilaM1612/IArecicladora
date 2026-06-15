@@ -11,10 +11,10 @@ clases = [
     'vidrio'
 ]
 
-modelo = tf.keras.models.load_model("modelo_reciclaje.keras")
+modelo = tf.keras.models.load_model("modelo/modelo_reciclaje.keras")
 
 img = image.load_img(
-    "prueba.jfif",
+    "dataset/prueba.jfif",
     target_size=(224,224)
 )
 

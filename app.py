@@ -1,25 +1,17 @@
-import cv2
+import tensorflow as tf
 
-cap = cv2.VideoCapture(0)
+print("TensorFlow cargado")
 
-contador = 0
+import sys
 
-while True:
-    ret, frame = cap.read()
+from PyQt5.QtWidgets import QApplication
 
-    cv2.imshow("Captura", frame)
+from interfaz.ventana_principal import VentanaPrincipal
 
-    tecla = cv2.waitKey(1)
+app = QApplication(sys.argv)
 
-    if tecla == ord('s'):
-        cv2.imwrite(
-            f"dataset/botella/img_{contador}.jpg",
-            frame
-        )
-        contador += 1
+ventana = VentanaPrincipal()
 
-    if tecla == 27:
-        break
+ventana.show()
 
-cap.release()
-cv2.destroyAllWindows()
+sys.exit(app.exec_())
