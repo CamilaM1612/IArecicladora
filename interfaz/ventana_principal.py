@@ -1,19 +1,20 @@
 from PyQt5.QtWidgets import (
     QWidget,
-    QLabel,
-    QVBoxLayout
+    QHBoxLayout,
+    QVBoxLayout,
+    QFrame,
+    QLabel
 )
 
 from PyQt5.QtCore import QTimer
 
-from PyQt5.QtGui import (
-    QImage,
-    QPixmap
-)
-
-import cv2
-
 from camara_ia import CamaraIA
+
+from interfaz.componentes.menu_lateral import MenuLateral
+from interfaz.componentes.panel_webcam import PanelWebcam
+from interfaz.componentes.panel_resultados import (
+    PanelResultados
+)
 
 
 class VentanaPrincipal(QWidget):
@@ -23,38 +24,28 @@ class VentanaPrincipal(QWidget):
         super().__init__()
 
         self.setWindowTitle(
-            "Clasificador Inteligente de Residuos"
+            "EcoVision"
         )
 
-        self.resize(900, 700)
-
-        print("Antes de CamaraIA")
+        self.resize(1400, 800)
 
         self.camara = CamaraIA()
 
-        print("Despues de CamaraIA")
+        self.setStyleSheet("""
+            QWidget{
+                background-color:#0f172a;
+                color:white;
+                font-family:Segoe UI;
+            }
+        """)
 
-        layout = QVBoxLayout()
+        self.menu = MenuLateral()
 
-        self.video_label = QLabel()
-        layout.addWidget(self.video_label)
+        self.webcam = PanelWebcam()
 
-        self.objeto_label = QLabel(
-            "Objeto: ---"
-        )
-        layout.addWidget(self.objeto_label)
+        self.resultados = PanelResultados()
 
-        self.categoria_label = QLabel(
-            "Categoria: ---"
-        )
-        layout.addWidget(self.categoria_label)
-
-        self.confianza_label = QLabel(
-            "Confianza: ---"
-        )
-        layout.addWidget(self.confianza_label)
-
-        self.setLayout(layout)
+        self.crear_ui()
 
         self.timer = QTimer()
 
@@ -63,6 +54,86 @@ class VentanaPrincipal(QWidget):
         )
 
         self.timer.start(100)
+
+    def crear_ui(self):
+
+        layout_principal = QHBoxLayout()
+
+        contenido = QVBoxLayout()
+
+        header = QFrame()
+
+        header.setFixedHeight(80)
+
+        header.setStyleSheet("""
+            background-color:#111827;
+            border-radius:12px;
+        """)
+
+        header_layout = QVBoxLayout()
+
+        titulo = QLabel(
+            "♻ EcoVision"
+        )
+
+        titulo.setStyleSheet("""
+            font-size:28px;
+            font-weight:bold;
+            color:#22c55e;
+        """)
+
+        subtitulo = QLabel(
+            "Sistema Inteligente de Clasificación de Residuos"
+        )
+
+        subtitulo.setStyleSheet("""
+            font-size:14px;
+            color:#94a3b8;
+        """)
+
+        header_layout.addWidget(
+            titulo
+        )
+
+        header_layout.addWidget(
+            subtitulo
+        )
+
+        header.setLayout(
+            header_layout
+        )
+
+        contenido.addWidget(
+            header
+        )
+
+        panel = QHBoxLayout()
+
+        panel.addWidget(
+            self.webcam,
+            3
+        )
+
+        panel.addWidget(
+            self.resultados,
+            1
+        )
+
+        contenido.addLayout(
+            panel
+        )
+
+        layout_principal.addWidget(
+            self.menu
+        )
+
+        layout_principal.addLayout(
+            contenido
+        )
+
+        self.setLayout(
+            layout_principal
+        )
 
     def actualizar_video(self):
 
@@ -73,37 +144,14 @@ class VentanaPrincipal(QWidget):
         if frame is None:
             return
 
-        rgb = cv2.cvtColor(
-            frame,
-            cv2.COLOR_BGR2RGB
+        self.webcam.actualizar_frame(
+            frame
         )
 
-        h, w, ch = rgb.shape
-
-        bytes_per_line = ch * w
-
-        imagen_qt = QImage(
-            rgb.data,
-            w,
-            h,
-            bytes_per_line,
-            QImage.Format_RGB888
-        )
-
-        self.video_label.setPixmap(
-            QPixmap.fromImage(imagen_qt)
-        )
-
-        self.objeto_label.setText(
-            f"Objeto: {clase}"
-        )
-
-        self.categoria_label.setText(
-            f"Categoria: {categoria}"
-        )
-
-        self.confianza_label.setText(
-            f"Confianza: {confianza:.1f}%"
+        self.resultados.actualizar_datos(
+            clase,
+            categoria,
+            confianza
         )
 
     def closeEvent(self, event):
