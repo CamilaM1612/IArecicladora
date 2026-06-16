@@ -47,6 +47,14 @@ class VentanaPrincipal(QWidget):
 
         self.crear_ui()
 
+        self.webcam.btn_iniciar.clicked.connect(
+        self.iniciar_camara
+        )
+
+        self.webcam.btn_detener.clicked.connect(
+        self.detener_camara
+        )
+
         self.timer = QTimer()
 
         self.timer.timeout.connect(
@@ -59,11 +67,22 @@ class VentanaPrincipal(QWidget):
 
         layout_principal = QHBoxLayout()
 
+        layout_principal.setSpacing(20)
+
+        layout_principal.setContentsMargins(
+            15,
+            15,
+            15,
+            15
+        )
+
         contenido = QVBoxLayout()
+
+        contenido.setSpacing(20)
 
         header = QFrame()
 
-        header.setFixedHeight(80)
+        header.setFixedHeight(100)
 
         header.setStyleSheet("""
             background-color:#111827;
@@ -154,6 +173,19 @@ class VentanaPrincipal(QWidget):
             confianza
         )
 
+    def iniciar_camara(self):
+
+        if not self.timer.isActive():
+
+            self.timer.start(100)
+
+
+    def detener_camara(self):
+
+        if self.timer.isActive():
+
+            self.timer.stop()
+    
     def closeEvent(self, event):
 
         self.camara.liberar()
