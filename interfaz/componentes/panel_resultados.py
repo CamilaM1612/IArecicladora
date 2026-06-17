@@ -1,11 +1,23 @@
 from PyQt5.QtWidgets import (
     QFrame,
-    QLabel,
     QVBoxLayout,
-    QHBoxLayout
+    QHBoxLayout,
+    QLabel
 )
 
-from PyQt5.QtCore import Qt
+import qtawesome as qta
+
+from interfaz.componentes.resultado_objeto import (
+    ResultadoObjeto
+)
+
+from interfaz.componentes.resultado_categoria import (
+    ResultadoCategoria
+)
+
+from interfaz.componentes.resultado_contenedor import (
+    ResultadoContenedor
+)
 
 from interfaz.componentes.indicador_confianza import (
     IndicadorConfianza
@@ -18,128 +30,58 @@ class PanelResultados(QFrame):
 
         super().__init__()
 
-        self.setFixedWidth(420)
+        self.setFixedWidth(450)
 
         self.setStyleSheet("""
-            QFrame{
-                background-color:#111827;
-                border-radius:20px;
-            }
+            background-color:#111827;
+            border-radius:20px;
         """)
 
         layout = QVBoxLayout()
 
-        # ======================
-        # TITULO
-        # ======================
-
         titulo = QLabel(
-            "♻ Resultado de la clasificación"
+            "Resultado de la clasificación"
         )
 
         titulo.setStyleSheet("""
-            font-size:20px;
-            font-weight:bold;
-            color:white;
-            padding:10px;
-        """)
-
-        layout.addWidget(titulo)
-
-        # ======================
-        # CARD PRINCIPAL
-        # ======================
-
-        self.card_objeto = QFrame()
-
-        self.card_objeto.setStyleSheet("""
-            background-color:#0f172a;
-            border:1px solid #334155;
-            border-radius:20px;
-        """)
-
-        objeto_layout = QVBoxLayout()
-
-        self.icono_objeto = QLabel("♻")
-
-        self.icono_objeto.setAlignment(
-            Qt.AlignCenter
-        )
-
-        self.icono_objeto.setStyleSheet("""
-            font-size:60px;
-        """)
-
-        self.objeto_label = QLabel("---")
-
-        self.objeto_label.setAlignment(
-            Qt.AlignCenter
-        )
-
-        self.objeto_label.setStyleSheet("""
-            font-size:28px;
+            font-size:18px;
             font-weight:bold;
             color:white;
         """)
 
-        self.categoria_label = QLabel("---")
-
-        self.categoria_label.setAlignment(
-            Qt.AlignCenter
+        layout.addWidget(
+            titulo
         )
 
-        self.categoria_label.setStyleSheet("""
-            font-size:20px;
-            font-weight:bold;
-            color:#22c55e;
-            padding:8px;
-        """)
-
-        objeto_layout.addWidget(
-            self.icono_objeto
-        )
-
-        objeto_layout.addWidget(
-            self.objeto_label
-        )
-
-        objeto_layout.addWidget(
-            self.categoria_label
-        )
-
-        self.card_objeto.setLayout(
-            objeto_layout
+        self.resultado_objeto = (
+            ResultadoObjeto()
         )
 
         layout.addWidget(
-            self.card_objeto
+            self.resultado_objeto
         )
 
-        # ======================
-        # FILA CENTRAL
-        # ======================
-
         fila = QHBoxLayout()
-
-        # Confianza
 
         confianza_card = QFrame()
 
         confianza_card.setStyleSheet("""
             background-color:#0f172a;
             border:1px solid #334155;
-            border-radius:20px;
+            border-radius:18px;
         """)
 
         confianza_layout = QVBoxLayout()
 
-        lbl_conf = QLabel(
+        lbl = QLabel(
             "Confianza"
         )
 
-        lbl_conf.setStyleSheet("""
+        lbl.setStyleSheet("""
             color:#94a3b8;
-            font-size:14px;
+            font-size:13px;
+            border:none;
+            background:transparent;
         """)
 
         self.indicador = (
@@ -147,7 +89,7 @@ class PanelResultados(QFrame):
         )
 
         confianza_layout.addWidget(
-            lbl_conf
+            lbl
         )
 
         confianza_layout.addWidget(
@@ -158,47 +100,8 @@ class PanelResultados(QFrame):
             confianza_layout
         )
 
-        # Categoria
-
-        categoria_card = QFrame()
-
-        categoria_card.setStyleSheet("""
-            background-color:#0f172a;
-            border:1px solid #334155;
-            border-radius:20px;
-        """)
-
-        categoria_layout = QVBoxLayout()
-
-        titulo_cat = QLabel(
-            "Categoría"
-        )
-
-        titulo_cat.setStyleSheet("""
-            color:#94a3b8;
-            font-size:14px;
-        """)
-
-        self.descripcion_categoria = QLabel(
-            "---"
-        )
-
-        self.descripcion_categoria.setStyleSheet("""
-            font-size:18px;
-            font-weight:bold;
-            color:white;
-        """)
-
-        categoria_layout.addWidget(
-            titulo_cat
-        )
-
-        categoria_layout.addWidget(
-            self.descripcion_categoria
-        )
-
-        categoria_card.setLayout(
-            categoria_layout
+        self.resultado_categoria = (
+            ResultadoCategoria()
         )
 
         fila.addWidget(
@@ -206,78 +109,24 @@ class PanelResultados(QFrame):
         )
 
         fila.addWidget(
-            categoria_card
+            self.resultado_categoria
         )
 
         layout.addLayout(
             fila
         )
 
-        # ======================
-        # CONTENEDOR
-        # ======================
-
-        self.card_contenedor = QFrame()
-
-        self.card_contenedor.setStyleSheet("""
-            background-color:#13281d;
-            border:2px solid #22c55e;
-            border-radius:20px;
-        """)
-
-        cont_layout = QVBoxLayout()
-
-        titulo_cont = QLabel(
-            "🗑 Contenedor sugerido"
-        )
-
-        titulo_cont.setStyleSheet("""
-            font-size:18px;
-            font-weight:bold;
-        """)
-
-        self.contenedor_label = QLabel(
-            "---"
-        )
-
-        self.contenedor_label.setStyleSheet("""
-            font-size:26px;
-            font-weight:bold;
-            color:#22c55e;
-        """)
-
-        self.descripcion_contenedor = QLabel(
-            ""
-        )
-
-        self.descripcion_contenedor.setStyleSheet("""
-            font-size:15px;
-            color:white;
-        """)
-
-        cont_layout.addWidget(
-            titulo_cont
-        )
-
-        cont_layout.addWidget(
-            self.contenedor_label
-        )
-
-        cont_layout.addWidget(
-            self.descripcion_contenedor
-        )
-
-        self.card_contenedor.setLayout(
-            cont_layout
+        self.resultado_contenedor = (
+            ResultadoContenedor()
         )
 
         layout.addWidget(
-            self.card_contenedor
+            self.resultado_contenedor
         )
 
-        layout.addStretch()
-
-        self.setLayout(layout)
+        self.setLayout(
+            layout
+        )
 
     def actualizar_datos(
         self,
@@ -289,26 +138,86 @@ class PanelResultados(QFrame):
         nombres = {
             "basura_domestica": "Basura Doméstica",
             "botella_plastico": "Botella Plástica",
-            "envase_carton": "Envase de Cartón",
             "metalico": "Metálico",
             "papel_carton": "Papel y Cartón",
-            "vidrio": "Vidrio"
+            "vidrio": "Vidrio",
+            "organico": "Orgánico"
         }
 
         iconos = {
-            "basura_domestica": "🗑",
-            "botella_plastico": "🧴",
-            "envase_carton": "📦",
-            "metalico": "🥫",
-            "papel_carton": "📄",
-            "vidrio": "🍾"
+            "basura_domestica": qta.icon(
+                "fa5s.trash",
+                color="#ef4444"
+            ),
+
+            "botella_plastico": qta.icon(
+                "fa5s.wine-bottle",
+                color="#eab308"
+            ),
+
+            "metalico": qta.icon(
+                "fa5s.cube",
+                color="#eab308"
+            ),
+
+            "papel_carton": qta.icon(
+                "fa5s.file",
+                color="#3b82f6"
+            ),
+
+            "vidrio": qta.icon(
+                "fa5s.wine-bottle",
+                color="#22c55e"
+            ),
+
+            "organico": qta.icon(
+                "fa5s.apple-alt",
+                color="#92400e"
+            )
         }
 
-        self.objeto_label.setText(
-            nombres[clase]
-        )
+        contenedores = {
 
-        self.icono_objeto.setText(
+            "papel_carton": {
+                "nombre": "AZUL",
+                "descripcion": "Depositar papel y cartón",
+                "reciclable": True
+            },
+
+            "botella_plastico": {
+                "nombre": "AMARILLO",
+                "descripcion": "Depositar plásticos y envases",
+                "reciclable": True
+            },
+
+            "metalico": {
+                "nombre": "AMARILLO",
+                "descripcion": "Depositar metales y latas",
+                "reciclable": True
+            },
+
+            "vidrio": {
+                "nombre": "VERDE",
+                "descripcion": "Depositar vidrio",
+                "reciclable": True
+            },
+
+            "organico": {
+                "nombre": "MARRÓN",
+                "descripcion": "Depositar residuos orgánicos",
+                "reciclable": True
+            },
+
+            "basura_domestica": {
+                "nombre": "NEGRO",
+                "descripcion": "Depositar residuos no reciclables",
+                "reciclable": False
+            }
+        }
+
+        self.resultado_objeto.actualizar(
+            nombres[clase],
+            categoria,
             iconos[clase]
         )
 
@@ -316,38 +225,14 @@ class PanelResultados(QFrame):
             confianza
         )
 
-        if categoria == "RECICLABLE":
+        info = contenedores[clase]
 
-            self.categoria_label.setText(
-                "RECICLABLE ♻"
-            )
+        self.resultado_categoria.actualizar(
+            info["reciclable"]
+        )
 
-            self.descripcion_categoria.setText(
-                "Puede ser reciclado"
-            )
-
-            self.contenedor_label.setText(
-                "🟢 VERDE"
-            )
-
-            self.descripcion_contenedor.setText(
-                "Depositar en reciclables"
-            )
-
-        else:
-
-            self.categoria_label.setText(
-                "NO RECICLABLE"
-            )
-
-            self.descripcion_categoria.setText(
-                "Desecho común"
-            )
-
-            self.contenedor_label.setText(
-                "🔴 ROJO"
-            )
-
-            self.descripcion_contenedor.setText(
-                "Depositar en basura común"
-            )
+        self.resultado_contenedor.actualizar(
+            info["nombre"],
+            info["descripcion"],
+            info["reciclable"]
+        )

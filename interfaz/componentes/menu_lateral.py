@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import (
     QPushButton
 )
 
+from PyQt5.QtCore import Qt
+
 import qtawesome as qta
 
 
@@ -20,6 +22,11 @@ class MenuLateral(QFrame):
             QFrame{
                 background-color:#111827;
                 border-radius:20px;
+            }
+
+            QLabel{
+                border:none;
+                background:transparent;
             }
 
             QPushButton{
@@ -43,47 +50,85 @@ class MenuLateral(QFrame):
 
         layout = QVBoxLayout()
 
+        layout.setContentsMargins(
+            15,
+            20,
+            15,
+            20
+        )
+
+        layout.setSpacing(10)
+
         titulo = QLabel(
-            "♻ EcoVision"
+            "EcoVision"
+        )
+
+        titulo.setAlignment(
+            Qt.AlignCenter
         )
 
         titulo.setStyleSheet("""
             font-size:24px;
             font-weight:bold;
-            padding:15px;
             color:#22c55e;
         """)
 
-        layout.addWidget(titulo)
-
         layout.addWidget(
-            QPushButton(
-                qta.icon("fa5s.home"),
-                " Inicio"
-            )
+            titulo
+        )
+
+        layout.addSpacing(20)
+
+        btn_inicio = QPushButton(
+            qta.icon(
+                "fa5s.home",
+                color="white"
+            ),
+            " Inicio"
+        )
+
+        btn_historial = QPushButton(
+            qta.icon(
+                "fa5s.history",
+                color="white"
+            ),
+            " Historial"
+        )
+
+        btn_estadisticas = QPushButton(
+            qta.icon(
+                "fa5s.chart-bar",
+                color="white"
+            ),
+            " Estadísticas"
+        )
+
+        btn_configuracion = QPushButton(
+            qta.icon(
+                "fa5s.cog",
+                color="white"
+            ),
+            " Configuración"
         )
 
         layout.addWidget(
-            QPushButton(
-                qta.icon("fa5s.history"),
-                " Historial"
-            )
+            btn_inicio
         )
 
         layout.addWidget(
-            QPushButton(
-                qta.icon("fa5s.chart-bar"),
-                " Estadísticas"
-            )
+            btn_historial
         )
 
         layout.addWidget(
-            QPushButton(
-                qta.icon("fa5s.cog"),
-                " Configuración"
-            )
+            btn_estadisticas
+        )
+
+        layout.addWidget(
+            btn_configuracion
         )
 
         layout.addStretch()
 
-        self.setLayout(layout)
+        self.setLayout(
+            layout
+        )

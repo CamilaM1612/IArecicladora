@@ -27,7 +27,7 @@ class VentanaPrincipal(QWidget):
             "EcoVision"
         )
 
-        self.resize(1400, 800)
+        self.resize(1200, 700)
 
         self.camara = CamaraIA()
 

@@ -1,10 +1,12 @@
 from PyQt5.QtWidgets import QWidget
+
 from PyQt5.QtGui import (
     QPainter,
     QPen,
     QColor,
     QFont
 )
+
 from PyQt5.QtCore import Qt
 
 
@@ -17,8 +19,8 @@ class IndicadorConfianza(QWidget):
         self.valor = 0
 
         self.setMinimumSize(
-            150,
-            150
+            180,
+            180
         )
 
     def set_valor(self, valor):
@@ -38,18 +40,19 @@ class IndicadorConfianza(QWidget):
         ancho = self.width()
         alto = self.height()
 
-        tamaño = min(ancho, alto) - 20
+        margen = 25
+
+        tamaño = min(
+            ancho,
+            alto
+        ) - margen
 
         x = (ancho - tamaño) // 2
         y = (alto - tamaño) // 2
 
-        # =====================
-        # CIRCULO FONDO
-        # =====================
-
         pen_fondo = QPen(
             QColor("#1e293b"),
-            12
+            14
         )
 
         painter.setPen(
@@ -62,10 +65,6 @@ class IndicadorConfianza(QWidget):
             tamaño,
             tamaño
         )
-
-        # =====================
-        # CIRCULO PROGRESO
-        # =====================
 
         if self.valor >= 80:
 
@@ -81,7 +80,11 @@ class IndicadorConfianza(QWidget):
 
         pen_progreso = QPen(
             QColor(color),
-            12
+            14
+        )
+
+        pen_progreso.setCapStyle(
+            Qt.RoundCap
         )
 
         painter.setPen(
@@ -101,17 +104,13 @@ class IndicadorConfianza(QWidget):
             -angulo * 16
         )
 
-        # =====================
-        # TEXTO %
-        # =====================
-
         painter.setPen(
             QColor("white")
         )
 
         fuente = QFont()
 
-        fuente.setPointSize(16)
+        fuente.setPointSize(18)
 
         fuente.setBold(True)
 

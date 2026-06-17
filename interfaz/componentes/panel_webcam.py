@@ -13,6 +13,7 @@ from PyQt5.QtGui import (
     QPixmap
 )
 
+import qtawesome as qta
 import cv2
 
 
@@ -32,42 +33,79 @@ class PanelWebcam(QFrame):
 
         layout_principal = QVBoxLayout()
 
-        # ==========================
-        # TITULO
-        # ==========================
+        header_layout = QHBoxLayout()
 
-        titulo = QLabel(
-            "📹 Cámara en tiempo real"
-        )
-        estado = QLabel(
-            "🟢 Cámara Activa"
-        )
+        titulo_icono = QLabel()
 
-        estado.setStyleSheet("""
-            color:#22c55e;
-            font-size:14px;
-            padding-left:10px;
+        titulo_icono.setStyleSheet("""
             border:none;
+            background:transparent;
         """)
 
-        layout_principal.addWidget(
-            estado
+        titulo_icono.setPixmap(
+            qta.icon(
+                "fa5s.video",
+                color="#ffffff"
+            ).pixmap(20, 20)
         )
+
+        titulo = QLabel(
+            "Cámara en tiempo real"
+        )
+
         titulo.setStyleSheet("""
             font-size:20px;
             font-weight:bold;
             color:white;
-            padding:10px;
             border:none;
         """)
 
-        layout_principal.addWidget(
+        estado_icono = QLabel()
+       
+        estado_icono.setStyleSheet("""
+            border:none;
+            background:transparent;
+        """)
+        
+
+        estado_icono.setPixmap(
+            qta.icon(
+                "fa5s.circle",
+                color="#22c55e"
+            ).pixmap(12, 12)
+        )
+
+        estado = QLabel(
+            "Cámara Activa"
+        )
+
+        estado.setStyleSheet("""
+            color:white;
+            font-size:14px;
+            border:none;
+        """)
+
+        header_layout.addWidget(
+            titulo_icono
+        )
+
+        header_layout.addWidget(
             titulo
         )
 
-        # ==========================
-        # VIDEO
-        # ==========================
+        header_layout.addStretch()
+
+        header_layout.addWidget(
+            estado_icono
+        )
+
+        header_layout.addWidget(
+            estado
+        )
+
+        layout_principal.addLayout(
+            header_layout
+        )
 
         self.video_label = QLabel()
 
@@ -76,8 +114,8 @@ class PanelWebcam(QFrame):
         )
 
         self.video_label.setMinimumSize(
-            800,
-            500
+            640,
+            360
         )
 
         self.video_label.setStyleSheet("""
@@ -90,18 +128,28 @@ class PanelWebcam(QFrame):
             self.video_label
         )
 
-        # ==========================
-        # BOTONES
-        # ==========================
-
         botones_layout = QHBoxLayout()
 
         self.btn_iniciar = QPushButton(
-            "📷 Iniciar Cámara"
+            " Iniciar Cámara"
+        )
+
+        self.btn_iniciar.setIcon(
+            qta.icon(
+                "fa5s.play",
+                color="white"
+            )
         )
 
         self.btn_detener = QPushButton(
-            "⏹ Detener Cámara"
+            " Detener Cámara"
+        )
+
+        self.btn_detener.setIcon(
+            qta.icon(
+                "fa5s.stop",
+                color="white"
+            )
         )
 
         self.btn_iniciar.setStyleSheet("""
