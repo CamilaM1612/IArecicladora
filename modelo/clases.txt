@@ -1,0 +1,7 @@
+basura_domestica
+botella_plastico
+metalico
+organico
+papel_carton
+vidrio
+
