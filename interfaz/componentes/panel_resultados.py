@@ -2,8 +2,12 @@ from PyQt5.QtWidgets import (
     QFrame,
     QVBoxLayout,
     QHBoxLayout,
-    QLabel
+    QLabel,
+    QPushButton,
+    QFileDialog
 )
+
+from PyQt5.QtCore import pyqtSignal
 
 import qtawesome as qta
 
@@ -25,6 +29,8 @@ from interfaz.componentes.indicador_confianza import (
 
 
 class PanelResultados(QFrame):
+
+    archivo_soltado = pyqtSignal(str)
 
     def __init__(self):
 
@@ -124,9 +130,49 @@ class PanelResultados(QFrame):
             self.resultado_contenedor
         )
 
+        layout.addStretch()
+
+        # ======================
+        # BOTÓN DRAG AND DROP
+        # ======================
+
+        self.btn_subir_foto = QPushButton("📂 Subir Foto")
+
+        self.btn_subir_foto.setStyleSheet("""
+            QPushButton{
+                background-color:#0f172a;
+                color:#94a3b8;
+                border:2px solid #64748b;
+                padding:15px;
+                border-radius:12px;
+                font-size:14px;
+            }
+
+            QPushButton:hover{
+                color:white;
+                border:2px solid #94a3b8;
+            }
+
+            QPushButton:pressed{
+                background-color:#1e293b;
+            }
+        """)
+
+        self.btn_subir_foto.setFixedHeight(60)
+
+        self.btn_subir_foto.clicked.connect(
+            self.abrir_dialogo_archivo
+        )
+
+        layout.addWidget(
+            self.btn_subir_foto
+        )
+
         self.setLayout(
             layout
         )
+
+        self.setAcceptDrops(True)
 
     def actualizar_datos(
         self,
@@ -236,3 +282,87 @@ class PanelResultados(QFrame):
             info["descripcion"],
             info["reciclable"]
         )
+
+    def dragEnterEvent(self, event):
+        
+        if event.mimeData().hasUrls():
+            event.accept()
+            self.btn_subir_foto.setStyleSheet("""
+                QPushButton{
+                    background-color:#1e293b;
+                    color:white;
+                    border:2px solid #60a5fa;
+                    padding:15px;
+                    border-radius:12px;
+                    font-size:14px;
+                }
+            """)
+        else:
+            event.ignore()
+
+    def dragLeaveEvent(self, event):
+        
+        self.btn_subir_foto.setStyleSheet("""
+            QPushButton{
+                background-color:#0f172a;
+                color:#94a3b8;
+                border:2px solid #64748b;
+                padding:15px;
+                border-radius:12px;
+                font-size:14px;
+            }
+
+            QPushButton:hover{
+                color:white;
+                border:2px solid #94a3b8;
+            }
+
+            QPushButton:pressed{
+                background-color:#1e293b;
+            }
+        """)
+
+    def dropEvent(self, event):
+        
+        self.btn_subir_foto.setStyleSheet("""
+            QPushButton{
+                background-color:#0f172a;
+                color:#94a3b8;
+                border:2px solid #64748b;
+                padding:15px;
+                border-radius:12px;
+                font-size:14px;
+            }
+
+            QPushButton:hover{
+                color:white;
+                border:2px solid #94a3b8;
+            }
+
+            QPushButton:pressed{
+                background-color:#1e293b;
+            }
+        """)
+        
+        if event.mimeData().hasUrls():
+            url = event.mimeData().urls()[0]
+            ruta_archivo = url.toLocalFile()
+            
+            if ruta_archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+                self.archivo_soltado.emit(ruta_archivo)
+            
+            event.accept()
+        else:
+            event.ignore()
+
+    def abrir_dialogo_archivo(self):
+        
+        ruta_archivo, _ = QFileDialog.getOpenFileName(
+            self,
+            "Seleccionar Foto",
+            "",
+            "Imágenes (*.png *.jpg *.jpeg *.bmp *.gif);;Todos los archivos (*)"
+        )
+        
+        if ruta_archivo:
+            self.archivo_soltado.emit(ruta_archivo)

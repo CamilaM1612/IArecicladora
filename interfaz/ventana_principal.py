@@ -10,7 +10,6 @@ from PyQt5.QtCore import QTimer
 
 from camara_ia import CamaraIA
 
-from interfaz.componentes.menu_lateral import MenuLateral
 from interfaz.componentes.panel_webcam import PanelWebcam
 from interfaz.componentes.panel_resultados import (
     PanelResultados
@@ -39,8 +38,6 @@ class VentanaPrincipal(QWidget):
             }
         """)
 
-        self.menu = MenuLateral()
-
         self.webcam = PanelWebcam()
 
         self.resultados = PanelResultados()
@@ -53,6 +50,10 @@ class VentanaPrincipal(QWidget):
 
         self.webcam.btn_detener.clicked.connect(
         self.detener_camara
+        )
+
+        self.resultados.archivo_soltado.connect(
+            self.procesar_imagen_archivo
         )
 
         self.timer = QTimer()
@@ -142,10 +143,6 @@ class VentanaPrincipal(QWidget):
             panel
         )
 
-        layout_principal.addWidget(
-            self.menu
-        )
-
         layout_principal.addLayout(
             contenido
         )
@@ -185,6 +182,26 @@ class VentanaPrincipal(QWidget):
         if self.timer.isActive():
 
             self.timer.stop()
+
+    def procesar_imagen_archivo(self, ruta_archivo):
+        
+        # Detener la cámara automáticamente
+        if self.timer.isActive():
+            self.timer.stop()
+        
+        frame, clase, categoria, confianza = (
+            self.camara.procesar_imagen_archivo(ruta_archivo)
+        )
+        
+        if frame is not None:
+            
+            self.webcam.actualizar_frame(frame)
+            
+            self.resultados.actualizar_datos(
+                clase,
+                categoria,
+                confianza
+            )
     
     def closeEvent(self, event):
 
